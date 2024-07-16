@@ -6,7 +6,6 @@ import java.util.Iterator;
 public class HeightChecker {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		System.out.println(heightChecker(new int[] {1,1,4,2,1,3}));
 	}
 	public static int heightChecker(int[] heights) {
