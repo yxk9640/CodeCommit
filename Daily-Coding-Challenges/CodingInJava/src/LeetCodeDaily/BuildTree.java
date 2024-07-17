@@ -1,4 +1,14 @@
-public static TreeNode buildTreeFromList(Integer[] values) {
+package LeetCodeDaily;
+
+import LeetCodeDaily.TreeNode;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+public class BuildTree {
+    public static TreeNode buildTreeFromList(Integer[] values) {
         if (values == null || values.length == 0) {
             return null;
         }
@@ -26,3 +36,29 @@ public static TreeNode buildTreeFromList(Integer[] values) {
 
         return root;
     }
+
+    public static List<Integer> binaryTreeToList(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        if (root == null) {
+            return list;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        while (!queue.isEmpty()) {
+            TreeNode current = queue.poll();
+            list.add(current.val);
+
+            if (current.left != null) {
+                queue.offer(current.left);
+            }
+
+            if (current.right != null) {
+                queue.offer(current.right);
+            }
+        }
+
+        return list;
+    }
+}
