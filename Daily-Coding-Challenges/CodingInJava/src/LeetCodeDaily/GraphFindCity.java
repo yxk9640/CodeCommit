@@ -6,35 +6,68 @@ import java.util.*;
 
 public class GraphFindCity {
     public static void main(String[] args) {
-        System.out.println(findTheCity(4, new int[][]
+        System.out.println(findTheCity(5, new int[][]
                 {{0,1,2},{0,4,8},{1,2,3},{1,4,2},{2,3,1},{3,4,1}}, 2));
     }
     public static int findTheCity(int n, int[][] edges, int distanceThreshold) {
-        List<Integer> res = new ArrayList<>();
-        int minLen = Integer.MAX_VALUE;
-        Map<Integer, int[]> neighbour = new HashMap<>();
+        int INF =(int) 1e9 + 7;
+        int[][] distMatrix = new int[n][n];
+
         for (int i = 0; i < n; i++) {
-            neighbour.put(i, buildNeighbour(i, edges, distanceThreshold));
-            int curLen = neighbour.get(i).length;
-            if (curLen == minLen){
-                res.add(i);
-            } else if (curLen < minLen) {
-                res.clear();
-                res.add(i);
-                minLen = curLen;
+            Arrays.fill(distMatrix[i], INF);
+            distMatrix[i][i] = 0; // dist to itself
+        }
+
+        for (int[] edge: edges){
+            int start = edge[0];
+            int end = edge[1];
+            int weight = edge[2];
+            distMatrix[start][end] = weight;
+            distMatrix[end][start] = weight;
+
+        }
+
+        floyd(n, distMatrix);
+
+
+        return getLowestCity(n, distMatrix, distanceThreshold);
+    }
+
+    static void floyd(int n, int[][] distMatrix){
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    distMatrix[i][j] = Math.min(distMatrix[i][j],
+                            distMatrix[i][k] + distMatrix[k][j] );
+
+                }
             }
         }
-        // if 2 nodes have same neighbours return max
-        int maxNode = res.get(0);
-        for (int i = 1; i < res.size(); i++) {
-            maxNode = Math.max(maxNode, res.get(i));
+    }
+
+    static int getLowestCity(int n, int[][] distMatrix, int distThreshold){
+        int lowCity = -1;
+        int fewCount = n;
+
+        for (int i = 0; i < n; i++) {
+            int cur = 0;
+            for (int j = 0; j < n; j++) {
+                if (i == j){
+                    continue;
+                }
+                if (distMatrix[i][j] <= distThreshold)
+                    cur++;
+            }
+            if ( cur <= fewCount){
+                fewCount = cur;
+                lowCity = i;
+            }
+
         }
 
 
-        return maxNode;
+        return lowCity;
     }
 
-    public static int[] buildNeighbour(int from, int[][] edges,int maxDist ){
-        return new int[]{};
-    }
+
 }
